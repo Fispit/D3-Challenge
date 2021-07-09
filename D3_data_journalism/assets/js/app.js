@@ -22,13 +22,15 @@ function makeResponsive() {
       left: 50
     };
     
+    var startxaxis="income";
+    var startyaxis="obesity";   
 
     var height = svgHeight - margin.top - margin.bottom;
     var width = svgWidth - margin.left - margin.right;
 
 
   var svg = d3
-    .select(".chart")
+    .select("#row")
     .append("svg")
     .attr("height", svgHeight)
     .attr("width", svgWidth);
@@ -37,24 +39,56 @@ function makeResponsive() {
   var chartGroup = svg.append("g")
     .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
+    function xScale(statedata, chosenXAxis) {
+        // create scales
+        var xLinearScale = d3.scaleLinear()
+          .domain([d3.min(statedata, d => d[startxaxis]) * 0.8,
+            d3.max(statedata, d => d[startxaxis]) * 1.2
+          ])
+          .range([0, width]);
+      
+        return xLinearScale;
+      
+      }
+      
+      function yScale(statedata, startyaxis) {
+        // create scales
+        var yLinearScale = d3.scaleLinear()
+          .domain([d3.min(statedata, d => d[startyaxis]) * 0.8,
+            d3.max(statedata, d => d[startyaxis]) * 1.2
+          ])
+          .range([0, width]);
+      
+        return yLinearScale;
+      
+      }
+      
 
+    d3.csv("assets/data/data.csv").then(function(statedata) {
 
-    d3.csv("../data/data.csv").then(function(data) {});
+        var xLinearScale = xScale(statedata, startxaxis);
+        var yLinearScale = yScale(statedata, startyaxis);
+        var bottomAxis = d3.axisBottom(xLinearScale);
+        var leftAxis = d3.axisLeft(yLinearScale);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        var xAxis = chartGroup.append("g")
+                    .classed("x-axis", true)
+                    .attr("transform", `translate(0, ${height})`)
+                    .call(bottomAxis);
+        
+        chartGroup.append("g")
+                .call(leftAxis);
+      
+      
+      
+      
+      
+      
+    
+    
+    
+    
+    });
 
 
 }

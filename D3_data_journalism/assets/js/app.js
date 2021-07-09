@@ -30,8 +30,8 @@
   var svg = d3
     .select("#scatter")
     .append("svg")
-    .attr("height", height)
-    .attr("width", width);
+    .attr("height", svgHeight)
+    .attr("width", svgWidth);
 
 
   var chartGroup = svg.append("g")
@@ -71,12 +71,11 @@
 
         var xAxis = chartGroup.append("g")
                     .classed("x-axis", true)
-                    .attr("transform", `translate(0, ${height}`)//
+                    .attr("transform", `translate(0, ${height}`)
                     .call(bottomAxis);
         
         var yAxis = chartGroup.append("g")
                     .classed("y-axis", true)
-
                     .call(leftAxis);
       
         var circlesGroup = chartGroup.selectAll("circle")

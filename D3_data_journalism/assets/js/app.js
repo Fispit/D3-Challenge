@@ -1,6 +1,4 @@
 
-function makeResponsive() {
-
     // if the SVG area isn't empty when the browser loads,
     // remove it and replace it with a resized version of the chart
     var svgArea = d3.select("body").select("svg");
@@ -12,8 +10,8 @@ function makeResponsive() {
   
     // SVG wrapper dimensions are determined by the current width and
     // height of the browser window.
-    var svgWidth = window.innerWidth;
-    var svgHeight = window.innerHeight;
+    var svgWidth = 2000;
+    var svgHeight = 900;
   
     var margin = {
       top: 50,
@@ -30,10 +28,10 @@ function makeResponsive() {
 
 
   var svg = d3
-    .select("#row")
+    .select("#scatter")
     .append("svg")
-    .attr("height", svgHeight)
-    .attr("width", svgWidth);
+    .attr("height", height)
+    .attr("width", width);
 
 
   var chartGroup = svg.append("g")
@@ -42,8 +40,8 @@ function makeResponsive() {
     function xScale(statedata, chosenXAxis) {
         // create scales
         var xLinearScale = d3.scaleLinear()
-          .domain([d3.min(statedata, d => d[startxaxis]) * 0.8,
-            d3.max(statedata, d => d[startxaxis]) * 1.2
+          .domain([d3.min(statedata, d => d[startxaxis]),
+            d3.max(statedata, d => d[startxaxis])
           ])
           .range([0, width]);
       
@@ -54,10 +52,10 @@ function makeResponsive() {
       function yScale(statedata, startyaxis) {
         // create scales
         var yLinearScale = d3.scaleLinear()
-          .domain([d3.min(statedata, d => d[startyaxis]) * 0.8,
-            d3.max(statedata, d => d[startyaxis]) * 1.2
+          .domain([d3.min(statedata, d => d[startyaxis]),
+            d3.max(statedata, d => d[startyaxis])
           ])
-          .range([0, width]);
+          .range([0, height]);
       
         return yLinearScale;
       
@@ -73,12 +71,24 @@ function makeResponsive() {
 
         var xAxis = chartGroup.append("g")
                     .classed("x-axis", true)
-                    .attr("transform", `translate(0, ${height})`)
+                    .attr("transform", `translate(0, ${height}`)//
                     .call(bottomAxis);
         
-        chartGroup.append("g")
-                .call(leftAxis);
+        var yAxis = chartGroup.append("g")
+                    .classed("y-axis", true)
+
+                    .call(leftAxis);
       
+        var circlesGroup = chartGroup.selectAll("circle")
+                .data(statedata)
+                .enter()
+                .append("circle")
+                .attr("cx", d => xLinearScale(d.income))
+                .attr("cy", d => yLinearScale(d.obesity))
+                .attr("r", "15")
+                .attr("fill", "red")
+                .attr("opacity", "1")
+          circlesGroup.append("text",)        
       
       
       
@@ -89,11 +99,3 @@ function makeResponsive() {
     
     
     });
-
-
-}
-
-
-makeResponsive();
-
-d3.select(window).on("resize", makeResponsive);

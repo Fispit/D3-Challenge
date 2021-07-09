@@ -39,7 +39,7 @@ function makeResponsive() {
 
 
 
-    d3.csv("./data/data.csv").then(function(data) {});
+    d3.csv("../data/data.csv").then(function(data) {});
 
 
 

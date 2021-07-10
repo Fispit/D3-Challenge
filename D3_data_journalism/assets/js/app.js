@@ -19,9 +19,9 @@ function makeResponsive() {
   
     var margin = {
       top: 50,
-      bottom: 50,
+      bottom: 100,
       right: 50,
-      left: 50
+      left: 100
     };
     
     var startxaxis="income";
@@ -92,23 +92,45 @@ function makeResponsive() {
                 .attr("r", "17")
                 .attr("fill", "red")
                 .attr("opacity", "1")
+                .attr("id","cirledots");
+          
+            chartGroup.append("g").selectAll("text")
+                .data(statedata)
+                .enter()
+                .append("text")
+                .attr("x", d => xLinearScale(d.income)-12)
+                .attr("y", d => yLinearScale(d.obesity)+7)
+                .attr("id","circelabels")
+                .text(d=>d.abbr);    
+                
+            var labelsGroupx = chartGroup.append("g")
+                .attr("transform", `translate(${width / 2}, ${height + 20})`);
+                      
+                    
+            var albumsLabel = labelsGroupx.append("text")
+                .attr("x", 0)
+                .attr("y", 40)
+                .attr("value", "num_albums") // value to grab for event listener
+                .classed("inactive", true)
+                .text("Income");
 
-                chartGroup.selectAll("text")
-                    .data(statedata)
-                    .enter()
-                    .append("text")
-                    .attr("x", d => xLinearScale(d.income)-12)
-                    .attr("y", d => yLinearScale(d.obesity)+7)
-                    .text(d=>d.abbr);        
-      
-      
-      
-      
-      
+
+            var labelsGroupy = chartGroup.append("g")
+                .attr("transform", `translate(${0-margin.left}, ${height / 2})`);
+                      
     
-    
-    
-    
+
+            var albumsLabel = labelsGroupy.append("text")
+                .attr("transform", "rotate(-90)")
+                .attr("y", 0)
+                .attr("x", 0 )
+                .attr("dy", "1em")
+                .classed("inactive", true)
+                .text("Obesity");
+
+  // append y axis
+
+
     });
 
   }

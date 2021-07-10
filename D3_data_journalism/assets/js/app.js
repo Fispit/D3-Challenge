@@ -1,17 +1,21 @@
+// The code for the chart is wrapped inside a function that
+// automatically resizes the chart
+function makeResponsive() {
 
-    // if the SVG area isn't empty when the browser loads,
-    // remove it and replace it with a resized version of the chart
-    var svgArea = d3.select("body").select("svg");
-  
-    // clear svg is not empty
-    if (!svgArea.empty()) {
-      svgArea.remove();
-    }
-  
-    // SVG wrapper dimensions are determined by the current width and
-    // height of the browser window.
-    var svgWidth = 2000;
-    var svgHeight = 900;
+  // if the SVG area isn't empty when the browser loads,
+  // remove it and replace it with a resized version of the chart
+  var svgArea = d3.select("body").select("svg");
+
+  // clear svg is not empty
+  if (!svgArea.empty()) {
+    svgArea.remove();
+  }
+
+  // SVG wrapper dimensions are determined by the current width and
+  // height of the browser window.
+  var svgWidth = window.innerWidth-200;
+  var svgHeight = window.innerHeight-500;
+
   
     var margin = {
       top: 50,
@@ -71,11 +75,12 @@
 
         var xAxis = chartGroup.append("g")
                     .classed("x-axis", true)
-                    .attr("transform", `translate(0, ${height}`)
+                    .attr("transform", `translate(0, ${height})`)
                     .call(bottomAxis);
         
         var yAxis = chartGroup.append("g")
                     .classed("y-axis", true)
+                    .attr("transform", `translate(0, 0)`)
                     .call(leftAxis);
       
         var circlesGroup = chartGroup.selectAll("circle")
@@ -84,10 +89,17 @@
                 .append("circle")
                 .attr("cx", d => xLinearScale(d.income))
                 .attr("cy", d => yLinearScale(d.obesity))
-                .attr("r", "15")
+                .attr("r", "17")
                 .attr("fill", "red")
                 .attr("opacity", "1")
-          circlesGroup.append("text",)        
+
+                chartGroup.selectAll("text")
+                    .data(statedata)
+                    .enter()
+                    .append("text")
+                    .attr("x", d => xLinearScale(d.income)-12)
+                    .attr("y", d => yLinearScale(d.obesity)+7)
+                    .text(d=>d.abbr);        
       
       
       
@@ -98,3 +110,12 @@
     
     
     });
+
+  }
+
+
+// When the browser loads, makeResponsive() is called.
+makeResponsive();
+
+// When the browser window is resized, makeResponsive() is called.
+d3.select(window).on("resize", makeResponsive);
